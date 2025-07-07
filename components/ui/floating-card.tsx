@@ -5,13 +5,11 @@ import { motion } from "framer-motion"
 
 interface FloatingCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
-  hover?: boolean
 }
 
 export function FloatingCard({ 
   className, 
-  children, 
-  hover = true,
+  children,
   ...props 
 }: FloatingCardProps) {
   return (
@@ -22,7 +20,6 @@ export function FloatingCard({
       )}
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      whileHover={hover ? { y: -5, scale: 1.02 } : undefined}
       transition={{ duration: 0.3, ease: "easeOut" }}
       {...props}
     >

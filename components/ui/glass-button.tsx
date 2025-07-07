@@ -13,10 +13,10 @@ interface GlassButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>
 export const GlassButton = forwardRef<HTMLButtonElement, GlassButtonProps>(
   ({ className, variant = "primary", size = "md", children, ...props }, ref) => {
     const variants = {
-      primary: "bg-blue-500/20 border-blue-300/30 text-blue-700 hover:bg-blue-500/30 hover:border-blue-400/40",
-      secondary: "bg-gray-500/20 border-gray-300/30 text-gray-700 hover:bg-gray-500/30 hover:border-gray-400/40",
-      success: "bg-emerald-500/20 border-emerald-300/30 text-emerald-700 hover:bg-emerald-500/30 hover:border-emerald-400/40",
-      danger: "bg-red-500/20 border-red-300/30 text-red-700 hover:bg-red-500/30 hover:border-red-400/40",
+      primary: "bg-blue-500/20 border-blue-300/30 text-blue-700",
+      secondary: "bg-gray-500/20 border-gray-300/30 text-gray-700",
+      success: "bg-emerald-500/20 border-emerald-300/30 text-emerald-700",
+      danger: "bg-red-500/20 border-red-300/30 text-red-700",
     }
 
     const sizes = {
@@ -30,13 +30,13 @@ export const GlassButton = forwardRef<HTMLButtonElement, GlassButtonProps>(
         ref={ref}
         className={cn(
           "relative rounded-xl border backdrop-blur-sm font-medium transition-all duration-200",
-          "shadow-lg shadow-black/5 hover:shadow-xl hover:shadow-black/10",
+          "shadow-lg shadow-black/5",
           "focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:ring-offset-2",
+          "active:scale-95",
           variants[variant],
           sizes[size],
           className
         )}
-        whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         transition={{ duration: 0.1 }}
         {...props}

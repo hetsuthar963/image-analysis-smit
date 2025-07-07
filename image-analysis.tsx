@@ -38,6 +38,7 @@ import { ProgressRing } from "./components/ui/progress-ring"
 import { StatusBadge } from "./components/ui/status-badge"
 import { MetricCard } from "./components/ui/metric-card"
 import { UploadZone } from "./components/ui/upload-zone"
+import { ChainedLoader } from "./components/ui/chained-loader"
 
 type AnalysisStep = {
   id: string
@@ -175,17 +176,6 @@ export default function Component() {
       processSteps()
     }
   }, [state, steps.length])
-
-  const getStepIcon = (step: AnalysisStep) => {
-    switch (step.status) {
-      case "completed":
-        return <CheckCircle className="w-5 h-5 text-emerald-500" />
-      case "processing":
-        return <PulseRing size={20} color="#3b82f6" intensity="high" />
-      default:
-        return <Circle className="w-5 h-5 text-gray-300" />
-    }
-  }
 
   const mockResults = [
     { field: "Document Type", value: "Government ID", confidence: "98%" },
@@ -385,7 +375,7 @@ export default function Component() {
                   </FloatingCard>
                 </div>
 
-                {/* Right side - Progress */}
+                {/* Right side - Chained Loading Progress */}
                 <div className="space-y-8">
                   <FloatingCard className="p-8">
                     <div className="space-y-6">
@@ -401,37 +391,8 @@ export default function Component() {
                         </h2>
                       </div>
 
-                      <div className="space-y-4">
-                        {steps.map((step, index) => (
-                          <motion.div
-                            key={step.id}
-                            className="relative overflow-hidden"
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ delay: index * 0.1, duration: 0.5 }}
-                          >
-                            <GradientCard
-                              gradient={step.status === "processing" ? "blue" : step.status === "completed" ? "green" : "blue"}
-                              className="p-4"
-                            >
-                              <div className="flex items-center gap-4">
-                                {getStepIcon(step)}
-                                <span
-                                  className={`font-medium text-lg ${
-                                    step.status === "completed"
-                                      ? "text-emerald-700"
-                                      : step.status === "processing"
-                                        ? "text-blue-700"
-                                        : "text-gray-400"
-                                  }`}
-                                >
-                                  {step.name}
-                                </span>
-                              </div>
-                            </GradientCard>
-                          </motion.div>
-                        ))}
-                      </div>
+                      {/* Chained Loading Animation */}
+                      <ChainedLoader steps={steps} />
 
                       <StatusBadge status="processing">
                         <PulseRing size={16} color="#6b7280" intensity="low" />
@@ -566,7 +527,7 @@ export default function Component() {
                     {mockResults.map((result, index) => (
                       <motion.div
                         key={result.field}
-                        className="grid grid-cols-3 gap-4 p-6 border-b border-gray-100 hover:bg-gray-50/50 transition-colors"
+                        className="grid grid-cols-3 gap-4 p-6 border-b border-gray-100 transition-colors"
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4 + index * 0.1 }}

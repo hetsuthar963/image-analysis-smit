@@ -49,8 +49,9 @@ export function UploadZone({ onFileSelect, isUploading = false, className }: Upl
         "relative group cursor-pointer",
         className
       )}
-      whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.2 }}
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
     >
       <input
         type="file"
@@ -66,7 +67,7 @@ export function UploadZone({ onFileSelect, isUploading = false, className }: Upl
           "bg-gradient-to-br from-blue-50/50 via-white/50 to-indigo-50/50 backdrop-blur-sm",
           isDragOver || isUploading
             ? "border-blue-400 bg-blue-50/80"
-            : "border-gray-300 hover:border-blue-300 hover:bg-blue-50/30"
+            : "border-gray-300"
         )}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}

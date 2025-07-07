@@ -38,7 +38,6 @@ export function MetricCard({
       )}
       initial={{ scale: 0.9, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      whileHover={{ scale: 1.05 }}
       transition={{ duration: 0.3 }}
     >
       <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/20 to-transparent" />
