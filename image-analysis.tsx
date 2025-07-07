@@ -28,8 +28,7 @@ import { MultiSelect } from "./components/multi-select"
 import { ThreeBodyLoader } from "./components/three-body-loader"
 import { AnimatedCounter } from "./components/animated-counter"
 import { PulseRing } from "./components/pulse-ring"
-import { SkeletonOverlay } from "./components/skeleton-overlay"
-import { ImageCropper } from "./components/image-cropper"
+import { TransparentSelector } from "./components/ui/transparent-selector"
 import { AnimatedBackground } from "./components/ui/animated-background"
 import { GradientCard } from "./components/ui/gradient-card"
 import { FloatingCard } from "./components/ui/floating-card"
@@ -39,6 +38,7 @@ import { StatusBadge } from "./components/ui/status-badge"
 import { MetricCard } from "./components/ui/metric-card"
 import { UploadZone } from "./components/ui/upload-zone"
 import { ChainedLoader } from "./components/ui/chained-loader"
+import { ScanningOverlay } from "./components/ui/scanning-overlay"
 
 type AnalysisStep = {
   id: string
@@ -96,7 +96,7 @@ export default function Component() {
     reader.readAsDataURL(file)
   }
 
-  const handleCropComplete = (croppedImageData: string) => {
+  const handleSelectionComplete = (croppedImageData: string) => {
     setCroppedImage(croppedImageData)
     setState("ready")
   }
@@ -204,22 +204,22 @@ export default function Component() {
               <div className="text-center space-y-8">
                 <div className="space-y-4">
                   <motion.div
-                    className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center"
+                    className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-500/20 to-purple-500/20 dark:from-blue-400/30 dark:to-purple-400/30 rounded-2xl flex items-center justify-center"
                     animate={isUploading ? { rotate: 360 } : {}}
                     transition={{ duration: 2, repeat: isUploading ? Infinity : 0, ease: "linear" }}
                   >
                     {isUploading ? (
                       <ThreeBodyLoader size="md" color="#6366f1" />
                     ) : (
-                      <Upload className="w-10 h-10 text-blue-600" />
+                      <Upload className="w-10 h-10 text-blue-600 dark:text-blue-400" />
                     )}
                   </motion.div>
                   
                   <div>
-                    <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-2">
+                    <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-2">
                       {isUploading ? "Uploading..." : "Document Analysis"}
                     </h1>
-                    <p className="text-gray-600 text-lg">
+                    <p className="text-gray-600 dark:text-gray-400 text-lg">
                       {isUploading ? "Processing your image..." : "Upload and analyze your documents with AI"}
                     </p>
                   </div>
@@ -227,7 +227,7 @@ export default function Component() {
 
                 <div className="space-y-6">
                   <GradientCard gradient="blue" className="p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Analysis Options</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Analysis Options</h3>
                     <MultiSelect
                       options={analysisOptions}
                       onValueChange={setSelectedOptions}
@@ -256,7 +256,11 @@ export default function Component() {
             className="flex items-center justify-center min-h-screen p-4"
           >
             <FloatingCard className="w-full max-w-5xl p-8">
-              <ImageCropper imageSrc={uploadedImage} onCropComplete={handleCropComplete} onCancel={handleCropCancel} />
+              <TransparentSelector 
+                imageSrc={uploadedImage} 
+                onSelectionComplete={handleSelectionComplete} 
+                onCancel={handleCropCancel} 
+              />
             </FloatingCard>
           </motion.div>
         )}
@@ -272,21 +276,21 @@ export default function Component() {
             <FloatingCard className="w-full max-w-2xl p-8">
               <div className="text-center space-y-8">
                 <div className="space-y-4">
-                  <div className="mx-auto w-20 h-20 bg-gradient-to-br from-emerald-500/20 to-green-500/20 rounded-2xl flex items-center justify-center">
-                    <CheckCircle className="w-10 h-10 text-emerald-600" />
+                  <div className="mx-auto w-20 h-20 bg-gradient-to-br from-emerald-500/20 to-green-500/20 dark:from-emerald-400/30 dark:to-green-400/30 rounded-2xl flex items-center justify-center">
+                    <CheckCircle className="w-10 h-10 text-emerald-600 dark:text-emerald-400" />
                   </div>
                   
                   <div>
-                    <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-2">
+                    <h1 className="text-4xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent mb-2">
                       Ready for Analysis
                     </h1>
-                    <p className="text-gray-600 text-lg">Your document has been cropped and is ready to analyze</p>
+                    <p className="text-gray-600 dark:text-gray-400 text-lg">Your document has been selected and is ready to analyze</p>
                   </div>
                 </div>
 
                 <div className="space-y-6">
                   <GradientCard gradient="green" className="p-6">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Analysis Options</h3>
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Analysis Options</h3>
                     <MultiSelect
                       options={analysisOptions}
                       onValueChange={setSelectedOptions}
@@ -301,7 +305,7 @@ export default function Component() {
                       <div className="relative">
                         <img
                           src={croppedImage || "/placeholder.svg"}
-                          alt="Cropped document"
+                          alt="Selected document area"
                           className="max-w-md w-full h-auto rounded-2xl shadow-2xl"
                         />
                         {!isStartingAnalysis && (
@@ -361,7 +365,7 @@ export default function Component() {
           >
             <div className="max-w-7xl mx-auto">
               <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-                {/* Left side - Image */}
+                {/* Left side - Image with Scanning Effect */}
                 <div className="flex justify-center items-center min-h-[500px]">
                   <FloatingCard className="relative w-full max-w-lg p-4">
                     {displayImage && (
@@ -371,11 +375,11 @@ export default function Component() {
                         className="w-full h-auto max-h-[500px] object-contain rounded-xl"
                       />
                     )}
-                    <SkeletonOverlay />
+                    <ScanningOverlay />
                   </FloatingCard>
                 </div>
 
-                {/* Right side - Chained Loading Progress */}
+                {/* Right side - Continuous Workflow Progress */}
                 <div className="space-y-8">
                   <FloatingCard className="p-8">
                     <div className="space-y-6">
@@ -384,14 +388,14 @@ export default function Component() {
                           animate={{ rotate: 360 }}
                           transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
                         >
-                          <Zap className="w-6 h-6 text-blue-600" />
+                          <Zap className="w-6 h-6 text-blue-600 dark:text-blue-400" />
                         </motion.div>
-                        <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent">
-                          Analysis Progress
+                        <h2 className="text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+                          Analysis Workflow
                         </h2>
                       </div>
 
-                      {/* Chained Loading Animation */}
+                      {/* Continuous Chained Loading Animation */}
                       <ChainedLoader steps={steps} />
 
                       <StatusBadge status="processing">
@@ -458,10 +462,10 @@ export default function Component() {
             <div className="max-w-6xl mx-auto space-y-12">
               {/* Header */}
               <div className="text-center space-y-4">
-                <h1 className="text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent">
+                <h1 className="text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 dark:from-white dark:via-blue-300 dark:to-purple-300 bg-clip-text text-transparent">
                   Analysis Complete
                 </h1>
-                <p className="text-xl text-gray-600">Your document has been successfully analyzed with AI</p>
+                <p className="text-xl text-gray-600 dark:text-gray-400">Your document has been successfully analyzed with AI</p>
               </div>
 
               {/* Image and Summary */}
@@ -481,13 +485,13 @@ export default function Component() {
                     <div className="text-center space-y-4">
                       <ProgressRing progress={confidence} size={120}>
                         <div className="text-center">
-                          <div className="text-2xl font-bold text-blue-600">
+                          <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                             <AnimatedCounter value={confidence} suffix="%" />
                           </div>
-                          <div className="text-sm text-gray-600">Confidence</div>
+                          <div className="text-sm text-gray-600 dark:text-gray-400">Confidence</div>
                         </div>
                       </ProgressRing>
-                      <h3 className="text-xl font-semibold text-gray-900">Overall Analysis Score</h3>
+                      <h3 className="text-xl font-semibold text-gray-900 dark:text-white">Overall Analysis Score</h3>
                     </div>
                   </FloatingCard>
 
@@ -514,12 +518,12 @@ export default function Component() {
               <FloatingCard className="p-8">
                 <div className="space-y-6">
                   <div className="flex items-center gap-3">
-                    <FileText className="w-6 h-6 text-blue-600" />
-                    <h2 className="text-2xl font-bold text-gray-900">Detailed Analysis Results</h2>
+                    <FileText className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Detailed Analysis Results</h2>
                   </div>
 
-                  <div className="overflow-hidden rounded-2xl border border-gray-200">
-                    <div className="grid grid-cols-3 gap-4 p-6 bg-gradient-to-r from-gray-50 to-gray-100 font-semibold text-gray-900">
+                  <div className="overflow-hidden rounded-2xl border border-gray-200 dark:border-gray-700">
+                    <div className="grid grid-cols-3 gap-4 p-6 bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-700 font-semibold text-gray-900 dark:text-white">
                       <div>Field</div>
                       <div>Value</div>
                       <div>Confidence</div>
@@ -527,13 +531,13 @@ export default function Component() {
                     {mockResults.map((result, index) => (
                       <motion.div
                         key={result.field}
-                        className="grid grid-cols-3 gap-4 p-6 border-b border-gray-100 transition-colors"
+                        className="grid grid-cols-3 gap-4 p-6 border-b border-gray-100 dark:border-gray-700 transition-colors"
                         initial={{ opacity: 0, x: -10 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4 + index * 0.1 }}
                       >
-                        <div className="font-medium text-gray-900">{result.field}</div>
-                        <div className="text-gray-700">{result.value}</div>
+                        <div className="font-medium text-gray-900 dark:text-white">{result.field}</div>
+                        <div className="text-gray-700 dark:text-gray-300">{result.value}</div>
                         <div>
                           <StatusBadge status="completed">
                             {result.confidence}
